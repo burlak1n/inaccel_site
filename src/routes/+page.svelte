@@ -8,9 +8,45 @@
   let education = '';
   let interests = [];
 
-  const handleSubmit = (e) => {
+  let isSubmitting = false;
+  let submitMessage = '';
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitted:', { name, telegram, education, interests });
+    isSubmitting = true;
+    submitMessage = '';
+
+    try {
+      const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          telegram,
+          education,
+          interests
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        submitMessage = 'Форма успешно отправлена!';
+        // Очищаем форму
+        name = '';
+        telegram = '';
+        education = '';
+        interests = [];
+      } else {
+        submitMessage = 'Ошибка при отправке: ' + result.error;
+      }
+    } catch (error) {
+      submitMessage = 'Ошибка сети: ' + error.message;
+    } finally {
+      isSubmitting = false;
+    }
   };
 </script>
 
@@ -87,6 +123,30 @@
     color: var(--primary-purple);
     text-decoration: underline;
   }
+
+  .submit-message {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  .submit-message.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .submit-message.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  .submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 </style>
 
 <main>
@@ -162,7 +222,16 @@
       </div>
 
       <div class="submit-section">
-        <button class="submit-button">Отправить</button>
+        <button class="submit-button" disabled={isSubmitting}>
+          {isSubmitting ? 'Отправка...' : 'Отправить'}
+        </button>
+        
+        {#if submitMessage}
+          <p class="submit-message {submitMessage.includes('успешно') ? 'success' : 'error'}">
+            {submitMessage}
+          </p>
+        {/if}
+        
         <p>Нажимая кнопку ты соглашаешься с <a href="#" class="privacy-link">политикой конфиденциальности</a></p>
       </div>
     </form>
