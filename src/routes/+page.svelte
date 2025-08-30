@@ -10,37 +10,63 @@
 
   let isSubmitting = false;
   let submitMessage = '';
+  let fieldErrors = {};
+
+  // Функция валидации полей
+  const validateFields = () => {
+    fieldErrors = {};
+    
+    if (!name.trim()) fieldErrors.name = 'Введите ФИО';
+    if (!telegram.trim()) fieldErrors.telegram = 'Введите Telegram';
+    if (!education.trim()) fieldErrors.education = 'Введите образовательную программу';
+    if (interests.length === 0) fieldErrors.interests = 'Выберите хотя бы одно направление';
+    
+    return Object.keys(fieldErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     isSubmitting = true;
     submitMessage = '';
 
+    // Валидация полей
+    if (!validateFields()) {
+      submitMessage = 'Пожалуйста, исправьте ошибки в форме';
+      isSubmitting = false;
+      return;
+    }
+
     try {
-      const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE', {
+      // Отправка на Google Apps Script
+      const response = await fetch('https://script.google.com/macros/s/AKfycbwFhoFtqLELORcfrW2Y4KPAvisrND_auW-uYuXmXOs-8b_wx-r8zjfwomiM662tkwQ9/exec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name,
-          telegram,
-          education,
-          interests
+          name: name.trim(),
+          telegram: telegram.trim(),
+          education: education.trim(),
+          interests: interests.join(', '),
+          timestamp: new Date().toISOString()
         })
       });
 
-      const result = await response.json();
-      
-      if (result.success) {
-        submitMessage = 'Форма успешно отправлена!';
-        // Очищаем форму
-        name = '';
-        telegram = '';
-        education = '';
-        interests = [];
+      if (response.ok) {
+        const result = await response.json();
+        
+        if (result.success) {
+          submitMessage = 'Форма успешно отправлена!';
+          // Очищаем форму
+          name = '';
+          telegram = '';
+          education = '';
+          interests = [];
+        } else {
+          submitMessage = 'Ошибка при отправке: ' + (result.error || 'Неизвестная ошибка');
+        }
       } else {
-        submitMessage = 'Ошибка при отправке: ' + result.error;
+        submitMessage = 'Ошибка сети: ' + response.status;
       }
     } catch (error) {
       submitMessage = 'Ошибка сети: ' + error.message;
@@ -145,6 +171,11 @@
     transform: translateY(-2px);
   }
 
+  .form-input.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+  }
+
   .form-input::placeholder {
     color: #999;
     font-style: italic;
@@ -225,6 +256,13 @@
     border: 1px solid #f5c6cb;
   }
 
+  .error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: block;
+  }
+
   @media (max-width: 768px) {
     .registration-section {
       padding: 2rem 1.5rem;
@@ -295,9 +333,12 @@
             type="text"
             bind:value={name} 
             placeholder="ФИО"
-            class="form-input"
+            class="form-input {fieldErrors.name ? 'error' : ''}"
             required
           >
+          {#if fieldErrors.name}
+            <span class="error-message">{fieldErrors.name}</span>
+          {/if}
         </div>
 
         <div class="form-section">
@@ -307,9 +348,12 @@
             type="text"
             bind:value={telegram} 
             placeholder="@"
-            class="form-input"
+            class="form-input {fieldErrors.telegram ? 'error' : ''}"
             required
           >
+          {#if fieldErrors.telegram}
+            <span class="error-message">{fieldErrors.telegram}</span>
+          {/if}
         </div>
 
         <div class="form-section">
@@ -319,9 +363,12 @@
             type="text"
             bind:value={education} 
             placeholder="Например, «Медиакоммуникации, БМД251»"
-            class="form-input"
+            class="form-input {fieldErrors.education ? 'error' : ''}"
             required
           >
+          {#if fieldErrors.education}
+            <span class="error-message">{fieldErrors.education}</span>
+          {/if}
         </div>
 
         <div class="form-section">
@@ -331,7 +378,7 @@
               id="interests" 
               multiple 
               bind:value={interests}
-              class="form-input form-select"
+              class="form-input form-select {fieldErrors.interests ? 'error' : ''}"
               required
             >
               <option value="marketing">Маркетинг и продвижение</option>
@@ -341,6 +388,9 @@
               <option value="logistics">Логистика и управление проектами</option>
             </select>
           </div>
+          {#if fieldErrors.interests}
+            <span class="error-message">{fieldErrors.interests}</span>
+          {/if}
         </div>
 
         <div class="submit-section">
