@@ -1,0 +1,19 @@
+/* Figma Styles of your File */
+:root {
+  /* Colors */
+  /* Fonts */
+  /* Effects */
+  --pyatna-sts-filter: blur(281.57px);
+  --ten-papki-box-shadow: 23px 25px 16.3px 0px rgba(0, 0, 0, 0.1);
+  --ten-otdelnoj-papki-box-shadow: 4px 5px 10px 0px rgba(0, 0, 0, 0.25);
+}
+
+/* Figma Color Variables of your File */
+:root,
+[data-variable-collection-mode="mode-1"] {
+  /* mode-1 */
+  --color: #fbd652;
+  --stsnyj-zheltycj: #fbd652;
+  --stsnyj-fioletovyj: #3e245b;
+  --bliki: #400088;
+}
