@@ -56,6 +56,10 @@
     --secondary-yellow: #f9c300;
     --background-gradient: linear-gradient(135deg, #f8f0ff 0%, #fcdbfd 100%);
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --form-bg: #1a1a1a;
+    --input-bg: #f5f5dc;
+    --input-border: #e0e0c8;
+    --text-light: #ffffff;
   }
 
   .container {
@@ -74,6 +78,22 @@
     box-shadow: var(--shadow);
   }
 
+  .info-block h2 {
+    font-size: 45px;
+    margin: 0 0 1rem 0;
+  }
+
+  .info-block ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin: 0;
+  }
+
+  .info-block li {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
   .training-cards {
     display: flex;
     gap: 2rem;
@@ -81,47 +101,109 @@
     flex-wrap: wrap;
   }
 
+  .registration-section {
+    padding: 3rem;
+  }
+
+  .registration-title {
+    color: var(--primary-purple);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
   .form-section {
-    margin-bottom: 4rem;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-  }
-
-  input, textarea, select {
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
     margin-bottom: 2rem;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--primary-purple);
+    font-size: 1.1rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 1.25rem;
+    background: var(--input-bg);
+    border: 2px solid var(--input-border);
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #333;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 3px rgba(106, 45, 135, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .form-input::placeholder {
+    color: #999;
+    font-style: italic;
+  }
+
+  .select-wrapper {
+    position: relative;
+  }
+
+  .select-wrapper::after {
+    content: '▼';
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-purple);
+    font-size: 0.8rem;
+    pointer-events: none;
+  }
+
+  .form-select {
+    appearance: none;
+    background: var(--input-bg);
+    cursor: pointer;
+  }
+
+  .submit-section {
+    text-align: center;
+    margin-top: 3rem;
   }
 
   .submit-button {
     background: var(--primary-purple);
     color: white;
     border: none;
-    padding: 1rem 3rem;
-    border-radius: 8px;
-    font-size: 40px;
-    transition: 0.3s;
+    padding: 1.25rem 4rem;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
     cursor: pointer;
-    margin-top: 2rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    box-shadow: 0 4px 16px rgba(106, 45, 135, 0.3);
   }
 
-  .submit-section {
-    text-align: center;
-    margin-top: 2rem;
+  .submit-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(106, 45, 135, 0.4);
+  }
+
+  .submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
   }
 
   .privacy-link {
     color: var(--primary-purple);
     text-decoration: underline;
+    font-weight: 500;
   }
 
   .submit-message {
@@ -143,9 +225,19 @@
     border: 1px solid #f5c6cb;
   }
 
-  .submit-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  @media (max-width: 768px) {
+    .registration-section {
+      padding: 2rem 1.5rem;
+    }
+    
+    .registration-title {
+      font-size: 2rem;
+    }
+    
+    .submit-button {
+      padding: 1rem 2rem;
+      font-size: 1.25rem;
+    }
   }
 </style>
 
@@ -192,48 +284,81 @@
       />
     </div>
 
-    <h2>Регистрация</h2>
+    <div class="registration-section">
+      <h2 class="registration-title">Регистрация</h2>
 
-    <form on:submit={handleSubmit}>
-      <div class="form-section">
-        <label for="name">Твое ФИО</label>
-        <input id="name" bind:value={name} placeholder="ФИО">
-      </div>
+      <form on:submit={handleSubmit}>
+        <div class="form-section">
+          <label for="name" class="form-label">Твое ФИО</label>
+          <input 
+            id="name" 
+            type="text"
+            bind:value={name} 
+            placeholder="ФИО"
+            class="form-input"
+            required
+          >
+        </div>
 
-      <div class="form-section">
-        <label for="telegram">Твой Telegram</label>
-        <input id="telegram" bind:value={telegram} placeholder="@">
-      </div>
+        <div class="form-section">
+          <label for="telegram" class="form-label">Твой Telegram</label>
+          <input 
+            id="telegram" 
+            type="text"
+            bind:value={telegram} 
+            placeholder="@"
+            class="form-input"
+            required
+          >
+        </div>
 
-      <div class="form-section">
-        <label for="education">Твоя образовательная программа и учебная группа</label>
-        <textarea id="education" bind:value={education} placeholder="Например, «Медиакоммуникации, БМД251»"></textarea>
-      </div>
+        <div class="form-section">
+          <label for="education" class="form-label">Твоя образовательная программа и учебная группа</label>
+          <input 
+            id="education" 
+            type="text"
+            bind:value={education} 
+            placeholder="Например, «Медиакоммуникации, БМД251»"
+            class="form-input"
+            required
+          >
+        </div>
 
-      <div class="form-section">
-        <label for="interests">Расскажи, какие направления в ивенте тебя больше всего интересуют?</label>
-        <select id="interests" multiple bind:value={interests}>
-          <option>Маркетинг и продвижение</option>
-          <option>Организация мероприятий</option>
-          <option>Креативное продюсирование</option>
-          <option>PR и медиакоммуникации</option>
-          <option>Логистика и управление проектами</option>
-        </select>
-      </div>
+        <div class="form-section">
+          <label for="interests" class="form-label">Расскажи, какие направления в ивенте тебя больше всего интересуют?</label>
+          <div class="select-wrapper">
+            <select 
+              id="interests" 
+              multiple 
+              bind:value={interests}
+              class="form-input form-select"
+              required
+            >
+              <option value="marketing">Маркетинг и продвижение</option>
+              <option value="organization">Организация мероприятий</option>
+              <option value="creative">Креативное продюсирование</option>
+              <option value="pr">PR и медиакоммуникации</option>
+              <option value="logistics">Логистика и управление проектами</option>
+            </select>
+          </div>
+        </div>
 
-      <div class="submit-section">
-        <button class="submit-button" disabled={isSubmitting}>
-          {isSubmitting ? 'Отправка...' : 'Отправить'}
-        </button>
-        
-        {#if submitMessage}
-          <p class="submit-message {submitMessage.includes('успешно') ? 'success' : 'error'}">
-            {submitMessage}
+        <div class="submit-section">
+          <button class="submit-button" disabled={isSubmitting}>
+            {isSubmitting ? 'Отправка...' : 'Отправить'}
+          </button>
+          
+          {#if submitMessage}
+            <p class="submit-message {submitMessage.includes('успешно') ? 'success' : 'error'}">
+              {submitMessage}
+            </p>
+          {/if}
+          
+          <p style="color: var(--text-light); margin-top: 1rem;">
+            Нажимая кнопку ты соглашаешься с <a href="#" class="privacy-link">политикой конфиденциальности</a>
           </p>
-        {/if}
-        
-        <p>Нажимая кнопку ты соглашаешься с <a href="#" class="privacy-link">политикой конфиденциальности</a></p>
-      </div>
-    </form>
+        </div>
+      </form>
+    </div>
   </div>
 </main>
