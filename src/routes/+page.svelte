@@ -1,6 +1,7 @@
 <script>
   import LogoHeader from '$lib/components/LogoHeader.svelte';
   import Header from '../components/Header.svelte';
+  import TrainingCard from '$lib/components/TrainingCard.svelte';
   
   let name = '';
   let telegram = '';
@@ -37,29 +38,11 @@
     box-shadow: var(--shadow);
   }
 
-  .steps {
+  .training-cards {
     display: flex;
     gap: 2rem;
-  }
-
-  .step {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    text-align: center;
-    position: relative;
-    width: 250px;
-  }
-
-  .step-number {
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 6rem;
-    opacity: 0.2;
-    color: var(--primary-purple);
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .form-section {
@@ -86,9 +69,17 @@
     border: none;
     padding: 1rem 3rem;
     border-radius: 8px;
-    font-size: 1.2rem;
+    font-size: 40px;
     transition: 0.3s;
     cursor: pointer;
+    margin-top: 2rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .submit-section {
+    text-align: center;
     margin-top: 2rem;
   }
 
@@ -114,23 +105,31 @@
       </ul>
     </div>
 
-    <div class="steps">
-      <div class="step" style="background: #fff5d9;">
-        <p>Обучение с 29 сентября до середины ноября</p>
-        <span class="step-number">1</span>
-      </div>
-      <div class="step" style="background: #e8d9ff;">
-        <p>Разработка собственного ивента</p>
-        <span class="step-number">2</span>
-      </div>
-      <div class="step" style="background: #d9d9ff;">
-        <p>Комьюнити будущих ивентщиков</p>
-        <span class="step-number">3</span>
-      </div>
-      <div class="step" style="background: #fff5d9;">
-        <p>Твой старт во внеучебке Вышки</p>
-        <span class="step-number">4</span>
-      </div>
+    <div class="training-cards">
+      <TrainingCard 
+        text="Обучение с 29 сентября до середины ноября"
+        number={1}
+        backgroundColor="#fff5d9"
+        textColor="var(--primary-purple)"
+      />
+      <TrainingCard 
+        text="Разработка собственного ивента"
+        number={2}
+        backgroundColor="#e8d9ff"
+        textColor="var(--primary-purple)"
+      />
+      <TrainingCard 
+        text="Комьюнити будущих ивентщиков"
+        number={3}
+        backgroundColor="#d9d9ff"
+        textColor="var(--primary-purple)"
+      />
+      <TrainingCard 
+        text="Твой старт во внеучебке Вышки"
+        number={4}
+        backgroundColor="#fff5d9"
+        textColor="var(--primary-purple)"
+      />
     </div>
 
     <h2>Регистрация</h2>
@@ -162,8 +161,10 @@
         </select>
       </div>
 
-      <button class="submit-button">Отправить</button>
-      <p>Нажимая кнопку ты соглашаешься с <a href="#" class="privacy-link">политикой конфиденциальности</a></p>
+      <div class="submit-section">
+        <button class="submit-button">Отправить</button>
+        <p>Нажимая кнопку ты соглашаешься с <a href="#" class="privacy-link">политикой конфиденциальности</a></p>
+      </div>
     </form>
   </div>
 </main>
