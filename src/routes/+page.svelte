@@ -1,6 +1,5 @@
 <script>
-  import InaccelLogo from '$lib/assets/inaccel-logo.svg';
-  import IngroupLogo from '$lib/assets/ingroupctc-logo.svg';
+  import LogoHeader from '$lib/components/LogoHeader.svelte';
   import Header from '../components/Header.svelte';
   
   let name = '';
@@ -29,39 +28,6 @@
     display: flex;
     flex-direction: column;
     gap: 52px;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .logo-container {
-    position: relative;
-    width: 200px;
-  }
-
-  .logo-accelerator {
-    width: 100%;
-  }
-
-  .ingrup-logo {
-    position: absolute;
-    top: -20px;
-    right: -50px;
-    width: 150px;
-  }
-
-  .registration-button {
-    background: var(--primary-purple);
-    color: white;
-    border: none;
-    padding: 1rem 3rem;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    transition: 0.3s;
-    cursor: pointer;
   }
 
   .info-block {
@@ -135,16 +101,7 @@
 <main>
   <div class="container">
     <Header />
-    <div class="header">
-      <div class="logo-container">
-        <img src={InaccelLogo} alt="INACCEL" class="logo-accelerator">
-      </div>
-      <div>
-        <p>INACCEL — акселератор по event-менеджменту от Ингруп СтС.</p>
-        <button class="registration-button">Регистрация</button>
-      </div>
-      <img src={IngroupLogo} alt="Ингруп СтС" class="ingrup-logo">
-    </div>
+    <LogoHeader />
 
     <div class="info-block">
       <h2>INACCEL – это</h2>
