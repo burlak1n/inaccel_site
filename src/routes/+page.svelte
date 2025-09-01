@@ -72,25 +72,21 @@
     }
 
     try {
-      // Отправка на Google Apps Script
-      const response = await fetch('https://script.google.com/macros/s/AKfycbwFhoFtqLELORcfrW2Y4KPAvisrND_auW-uYuXmXOs-8b_wx-r8zjfwomiM662tkwQ9/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: name.trim(),
-          telegram: telegram.trim(),
-          education: education.trim(),
-          interests: interests.join(', '),
-          timestamp: new Date().toISOString()
-        })
+      // Отправка на Google Apps Script через JSONP (обход CORS)
+      const params = new URLSearchParams({
+        name: name.trim(),
+        telegram: telegram.trim(),
+        education: education.trim(),
+        interests: interests.join(', '),
+        timestamp: new Date().toISOString()
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        
-        if (result.success) {
+      // Создаем уникальный callback ID
+      const callbackId = 'callback_' + Date.now();
+      
+      // Создаем глобальную функцию для callback
+      window[callbackId] = function(response) {
+        if (response && response.success) {
           submitMessage = 'Форма успешно отправлена!';
           // Очищаем форму
           name = '';
@@ -98,11 +94,44 @@
           education = '';
           interests = [];
         } else {
-          submitMessage = 'Ошибка при отправке: ' + (result.error || 'Неизвестная ошибка');
+          submitMessage = 'Ошибка при отправке: ' + (response?.error || 'Неизвестная ошибка');
         }
-      } else {
-        submitMessage = 'Ошибка сети: ' + response.status;
-      }
+        isSubmitting = false;
+        
+        // Удаляем callback функцию
+        delete window[callbackId];
+        
+        // Удаляем script тег
+        const script = document.getElementById('jsonp-script');
+        if (script) script.remove();
+      };
+
+      // Создаем script тег для JSONP
+      const script = document.createElement('script');
+      script.id = 'jsonp-script';
+      script.src = `https://script.google.com/macros/s/AKfycbx8x5IFc2M_F0uJtBeAZ-SVAWO79VWKAAbBc2HjCcl2qWY4Sx5kE9e2_qWOPfKlhRUD/exec?${params.toString()}&callback=${callbackId}`;
+      
+      // Обработка ошибок загрузки
+      script.onerror = () => {
+        submitMessage = 'Ошибка сети при отправке формы';
+        isSubmitting = false;
+        delete window[callbackId];
+        script.remove();
+      };
+
+      // Добавляем script на страницу
+      document.head.appendChild(script);
+      
+      // Таймаут на случай, если callback не сработает
+      setTimeout(() => {
+        if (window[callbackId]) {
+          submitMessage = 'Таймаут отправки формы';
+          isSubmitting = false;
+          delete window[callbackId];
+          script.remove();
+        }
+      }, 10000); // 10 секунд таймаут
+      
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
       submitMessage = 'Ошибка сети: ' + errorMessage;

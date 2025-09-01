@@ -11,53 +11,78 @@
 Замените содержимое файла `Code.gs` на следующий код:
 
 ```javascript
-function doPost(e) {
+function doGet(e) {
+  // Проверяем, что параметр e существует
+  if (!e) {
+    return ContentService
+      .createTextOutput('Form handler is working!')
+      .setMimeType(ContentService.MimeType.TEXT);
+  }
+  
+  // Получаем параметры из GET запроса
+  const params = e.parameter || {};
+  
   try {
-    // Получаем данные из формы
-    const data = JSON.parse(e.postData.contents);
-    
-    // Получаем активную таблицу
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
-    // Добавляем заголовки, если их нет
-    if (sheet.getLastRow() === 0) {
+    // Проверяем, есть ли данные для записи
+    if (params.name && params.telegram && params.education && params.interests) {
+      // Получаем активную таблицу
+      const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+      
+      // Добавляем заголовки, если их нет
+      if (sheet.getLastRow() === 0) {
+        sheet.appendRow([
+          'Дата и время',
+          'ФИО',
+          'Telegram',
+          'Образовательная программа',
+          'Интересы'
+        ]);
+      }
+      
+      // Добавляем новую строку с данными
       sheet.appendRow([
-        'Дата и время',
-        'ФИО',
-        'Telegram',
-        'Образовательная программа',
-        'Интересы'
+        new Date().toLocaleString('ru-RU'),
+        params.name,
+        params.telegram,
+        params.education,
+        params.interests
       ]);
+      
+      // Возвращаем JSONP ответ
+      const callback = params.callback || 'callback';
+      const response = { success: true, message: 'Данные успешно сохранены' };
+      
+      return ContentService
+        .createTextOutput(`${callback}(${JSON.stringify(response)})`)
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+        
+    } else {
+      // Если нет данных, возвращаем приветственное сообщение
+      return ContentService
+        .createTextOutput('Form handler is working!')
+        .setMimeType(ContentService.MimeType.TEXT);
     }
     
-    // Добавляем новую строку с данными
-    sheet.appendRow([
-      new Date().toLocaleString('ru-RU'),
-      data.name,
-      data.telegram,
-      data.education,
-      data.interests
-    ]);
-    
-    // Возвращаем успешный ответ
-    return ContentService
-      .createTextOutput(JSON.stringify({ success: true }))
-      .setMimeType(ContentService.MimeType.JSON);
-      
   } catch (error) {
-    // Возвращаем ошибку
+    // Возвращаем ошибку в JSONP формате
+    const callback = params.callback || 'callback';
+    const response = { success: false, error: error.toString() };
+    
     return ContentService
-      .createTextOutput(JSON.stringify({ 
-        success: false, 
-        error: error.toString() 
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+      .createTextOutput(`${callback}(${JSON.stringify(response)})`)
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
   }
 }
 
-function doGet(e) {
+function doPost(e) {
+  // Обработка POST запросов (если понадобится в будущем)
+  return doGet(e);
+}
+
+function doOptions(e) {
+  // Обработка preflight OPTIONS запроса
   return ContentService
-    .createTextOutput('Form handler is working!')
+    .createTextOutput('')
     .setMimeType(ContentService.MimeType.TEXT);
 }
 ```
@@ -75,7 +100,7 @@ function doGet(e) {
 ## Шаг 4: Обновление кода формы
 
 ✅ **URL уже настроен!** 
-Форма настроена на отправку данных на ваш Google Apps Script: `https://script.google.com/macros/s/AKfycbwFhoFtqLELORcfrW2Y4KPAvisrND_auW-uYuXmXOs-8b_wx-r8zjfwomiM662tkwQ9/exec`
+Форма настроена на отправку данных на ваш Google Apps Script: `https://script.google.com/macros/s/AKfycbx8x5IFc2M_F0uJtBeAZ-SVAWO79VWKAAbBc2HjCcl2qWY4Sx5kE9e2_qWOPfKlhRUD/exec`
 
 ## Шаг 5: Создание Google Sheets
 
@@ -103,3 +128,13 @@ function doGet(e) {
 - Веб-приложение доступно всем (кто знает URL)
 - Данные сохраняются в вашей Google таблице
 - Рекомендуется регулярно проверять логи в Google Apps Script
+
+## Решение проблемы CORS
+
+Google Apps Script автоматически обрабатывает CORS для веб-приложений. Если проблемы всё ещё возникают:
+
+1. **Пересоздать deployment** после обновления кода
+2. **Очистить кэш браузера**
+3. **Проверить, что таблица открыта** в Google Sheets
+4. **Убедиться, что скрипт выполняется от вашего имени**
+5. **Использовать режим разработки** для тестирования
