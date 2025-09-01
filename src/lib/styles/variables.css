@@ -1,6 +1,14 @@
 /* Figma Styles of your File */
 :root {
   /* Colors */
+  --primary-purple: #3E245B;
+  --secondary-yellow: #FBD652;
+  --background-gradient: linear-gradient(135deg, #f8f0ff 0%, #fcdbfd 100%);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --form-bg: #1a1a1a;
+  --input-bg: #F7F3ED;
+  --input-border: #e0e0c8;
+  --text-light: #ffffff;
   /* Fonts */
   /* Effects */
   --pyatna-sts-filter: blur(281.57px);
@@ -14,6 +22,6 @@
   /* mode-1 */
   --color: #fbd652;
   --stsnyj-zheltycj: #fbd652;
-  --stsnyj-fioletovyj: #3e245b;
+  --stsnyj-fioletovyj: #3E245B;
   --bliki: #400088;
 }
