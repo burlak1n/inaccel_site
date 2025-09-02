@@ -34,6 +34,7 @@
   let isSubmitting = false;
   let submitMessage = '';
   let fieldErrors: Record<string, string> = {};
+  let showSuccessModal = false;
 
   // Функция добавления тега
   const addTag = (tag: string) => {
@@ -63,6 +64,7 @@
     e.preventDefault();
     isSubmitting = true;
     submitMessage = '';
+    showSuccessModal = false;
 
     // Валидация полей
     if (!validateFields()) {
@@ -87,7 +89,7 @@
       // Создаем глобальную функцию для callback
       window[callbackId] = function(response) {
         if (response && response.success) {
-          submitMessage = 'Форма успешно отправлена!';
+          showSuccessModal = true;
           // Очищаем форму
           name = '';
           telegram = '';
@@ -135,7 +137,6 @@
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
       submitMessage = 'Ошибка сети: ' + errorMessage;
-    } finally {
       isSubmitting = false;
     }
   };
@@ -586,6 +587,12 @@
       font-size: 35px;
       border-radius: 20px;
     }
+    
+    .join-button {
+      padding: 1.5rem 5rem;
+      font-size: 35px;
+      border-radius: 20px;
+    }
   }
 
   /* Адаптивность для средних экранов */
@@ -641,6 +648,12 @@
     }
     
     .submit-button {
+      padding: 20px 40px;
+      font-size: 24px;
+      border-radius: 18px;
+    }
+    
+    .join-button {
       padding: 20px 40px;
       font-size: 24px;
       border-radius: 18px;
@@ -711,6 +724,12 @@
       font-size: 18px;
       border-radius: 16px;
     }
+    
+    .join-button {
+      padding: 10px 35px;
+      font-size: 18px;
+      border-radius: 16px;
+    }
     .privacy-text {
       font-size: 14px;
     }
@@ -774,9 +793,35 @@
     
     .submit-button {
       padding: 4px 16px;
-      font-size: 10px;
       border-radius: 12px;
     }
+    
+    .join-button {
+      padding: 4px 16px;
+      border-radius: 12px;
+    }
+    
+    .success-modal {
+      padding: 25px 15px;
+      margin: 1rem auto;
+    }
+
+    .success-modal h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .success-modal p {
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .join-button {
+      padding: 8px 24px;
+      font-size: 13px;
+      border-radius: 10px;
+    }
+    
     .privacy-text {
       font-size: 12px;
     }
@@ -843,6 +888,28 @@
       font-size: 14px;
       border-radius: 10px;
     }
+    
+    .success-modal {
+      padding: 20px 12px;
+      margin: 0.75rem auto;
+    }
+
+    .success-modal h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .success-modal p {
+      font-size: 11px;
+      margin-bottom: 18px;
+    }
+
+    .join-button {
+      padding: 6px 20px;
+      font-size: 11px;
+      border-radius: 8px;
+    }
+    
     .privacy-text {
       font-size: 10px;
     }
@@ -909,6 +976,33 @@
       font-size: 0.75rem;
       border-radius: 8px;
     }
+    
+    .join-button {
+      padding: 0.5rem 1.5rem;
+      font-size: 0.75rem;
+      border-radius: 8px;
+    }
+    
+    .success-modal {
+      padding: 15px 10px;
+      margin: 0.5rem auto;
+    }
+
+    .success-modal h3 {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .success-modal p {
+      font-size: 10px;
+      margin-bottom: 15px;
+    }
+
+    .join-button {
+      padding: 5px 16px;
+      font-size: 10px;
+      border-radius: 6px;
+    }
   }
 
   .privacy-text {
@@ -939,6 +1033,67 @@
     background: #f8d7da;
     color: #721c24;
   }
+
+  .success-modal {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+    max-width: 500px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #fff5f0 100%);
+  }
+
+  .success-modal h3 {
+    color: var(--primary-purple);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    font-family: var(--font-raleway);
+  }
+
+  .success-modal p {
+    color: var(--primary-purple);
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 0 30px 0;
+    font-family: var(--font-raleway);
+  }
+
+  .join-button {
+    background: linear-gradient(135deg, var(--primary-purple) 0%, #5a2a7a 100%);
+    color: white;
+    padding: 1.25rem 4rem;
+    border-radius: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    font-family: var(--font-raleway);
+  }
+
+  .join-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .join-button:hover::before {
+    left: 100%;
+  }
+
+  .join-button:hover {
+    transform: translateY(-2px);
+  }
+
+
 
   .error-message {
     color: #dc3545;
@@ -1052,6 +1207,26 @@
     .registration-title {
       font-size: 2rem;
     }
+
+    .success-modal {
+      padding: 30px 20px;
+      margin: 1.5rem auto;
+    }
+
+    .success-modal h3 {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .success-modal p {
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .join-button {
+      padding: 10px 28px;
+      font-size: 14px;
+    }
   }
 </style>
 
@@ -1079,107 +1254,117 @@
       <img src={FrameWhite} alt="Frame White" class="frame-image" />
     </div>
 
-    <div id="registration" class="registration-section">
-      <h2 class="registration-title">Регистрация</h2>
+          <div id="registration" class="registration-section">
+        {#if !showSuccessModal}
+          <h2 class="registration-title">Регистрация</h2>
 
-      <form on:submit={handleSubmit}>
-        <div class="form-section">
-          <label for="name" class="form-label">Твое ФИО</label>
-          <input 
-            id="name" 
-            type="text"
-            bind:value={name} 
-            placeholder="ФИО"
-            class="form-input {fieldErrors.name ? 'error' : ''}"
-            required
-          >
-          {#if fieldErrors.name}
-            <span class="error-message">{fieldErrors.name}</span>
-          {/if}
-        </div>
-
-        <div class="form-section">
-          <label for="telegram" class="form-label">Твой Telegram</label>
-          <input 
-            id="telegram" 
-            type="text"
-            bind:value={telegram} 
-            placeholder="@"
-            class="form-input {fieldErrors.telegram ? 'error' : ''}"
-            required
-          >
-          {#if fieldErrors.telegram}
-            <span class="error-message">{fieldErrors.telegram}</span>
-          {/if}
-        </div>
-
-        <div class="form-section">
-          <label for="education" class="form-label">Твоя образовательная программа и учебная группа</label>
-          <input 
-            id="education" 
-            type="text"
-            bind:value={education} 
-            placeholder="Например, «Медиакоммуникации, БМД251»"
-            class="form-input {fieldErrors.education ? 'error' : ''}"
-            required
-          >
-          {#if fieldErrors.education}
-            <span class="error-message">{fieldErrors.education}</span>
-          {/if}
-        </div>
-
-        <div class="form-section">
-          <label for="interests" class="form-label">Расскажи, какие направления в ивенте тебя больше всего интересуют?</label>
-          
-          <!-- Выбранные теги -->
-          <div class="selected-tags {fieldErrors.interests ? 'error' : ''}">
-            {#each interests as tag}
-              <span class="tag selected-tag">
-                {tag}
-                <button type="button" class="remove-tag" on:click={() => removeTag(tag)}>×</button>
-              </span>
-            {/each}
-            {#if interests.length === 0}
-              <span class="placeholder-text">Выберите направления...</span>
-            {/if}
-          </div>
-
-          <!-- Доступные теги -->
-          <div class="available-tags">
-            {#each availableTags as tag}
-              {#if !interests.includes(tag)}
-                <button 
-                  type="button" 
-                  class="tag available-tag" 
-                  on:click={() => addTag(tag)}
-                >
-                  {tag}
-                </button>
+          <form on:submit={handleSubmit}>
+            <div class="form-section">
+              <label for="name" class="form-label">Твое ФИО</label>
+              <input 
+                id="name" 
+                type="text"
+                bind:value={name} 
+                placeholder="ФИО"
+                class="form-input {fieldErrors.name ? 'error' : ''}"
+                required
+              >
+              {#if fieldErrors.name}
+                <span class="error-message">{fieldErrors.name}</span>
               {/if}
-            {/each}
+            </div>
+
+            <div class="form-section">
+              <label for="telegram" class="form-label">Твой Telegram</label>
+              <input 
+                id="telegram" 
+                type="text"
+                bind:value={telegram} 
+                placeholder="@"
+                class="form-input {fieldErrors.telegram ? 'error' : ''}"
+                required
+              >
+              {#if fieldErrors.telegram}
+                <span class="error-message">{fieldErrors.telegram}</span>
+              {/if}
+            </div>
+
+            <div class="form-section">
+              <label for="education" class="form-label">Твоя образовательная программа и учебная группа</label>
+              <input 
+                id="education" 
+                type="text"
+                bind:value={education} 
+                placeholder="Например, «Медиакоммуникации, БМД251»"
+                class="form-input {fieldErrors.education ? 'error' : ''}"
+                required
+              >
+              {#if fieldErrors.education}
+                <span class="error-message">{fieldErrors.education}</span>
+              {/if}
+            </div>
+
+            <div class="form-section">
+              <label for="interests" class="form-label">Расскажи, какие направления в ивенте тебя больше всего интересуют?</label>
+              
+              <!-- Выбранные теги -->
+              <div class="selected-tags {fieldErrors.interests ? 'error' : ''}">
+                {#each interests as tag}
+                  <span class="tag selected-tag">
+                    {tag}
+                    <button type="button" class="remove-tag" on:click={() => removeTag(tag)}>×</button>
+                  </span>
+                {/each}
+                {#if interests.length === 0}
+                  <span class="placeholder-text">Выберите направления...</span>
+                {/if}
+              </div>
+
+              <!-- Доступные теги -->
+              <div class="available-tags">
+                {#each availableTags as tag}
+                  {#if !interests.includes(tag)}
+                    <button 
+                      type="button" 
+                      class="tag available-tag" 
+                      on:click={() => addTag(tag)}
+                    >
+                      {tag}
+                    </button>
+                  {/if}
+                {/each}
+              </div>
+
+              {#if fieldErrors.interests}
+                <span class="error-message">{fieldErrors.interests}</span>
+              {/if}
+            </div>
+
+            <div class="submit-section">
+              <button class="submit-button" disabled={isSubmitting}>
+                {isSubmitting ? 'Ожидание...' : 'Отправить'}
+              </button>
+              
+              {#if submitMessage && !showSuccessModal}
+                <p class="submit-message error">
+                  {submitMessage}
+                </p>
+              {/if}
+              
+              <p class="privacy-text">
+                Нажимая кнопку ты соглашаешься с <a href="/privacy" class="privacy-link">политикой конфиденциальности</a>
+              </p>
+            </div>
+          </form>
+        {:else}
+          <div class="success-modal">
+            <h3>Анкета успешно заполнена</h3>
+            <p>Ты успешно зарегистрирован<br>на INACCEL 2025 — вступай в чат<br>участников, чтобы быть в курсе<br>всех новостей</p>
+            <button class="join-button" on:click={() => window.open('https://t.me/+wN-bfWzzMeI1ZjRi', '_blank')}>
+              Вступить
+            </button>
           </div>
-
-          {#if fieldErrors.interests}
-            <span class="error-message">{fieldErrors.interests}</span>
-          {/if}
-        </div>
-
-        <div class="submit-section">
-          <button class="submit-button" disabled={isSubmitting}>
-            {isSubmitting ? 'Отправка...' : 'Отправить'}
-          </button>
-          
-          {#if submitMessage}
-            <p class="submit-message {submitMessage.includes('успешно') ? 'success' : 'error'}">
-              {submitMessage}
-            </p>
-          {/if}
-          
-          <p class="privacy-text">
-            Нажимая кнопку ты соглашаешься с <a href="/privacy" class="privacy-link">политикой конфиденциальности</a>
-          </p>
-        </div>
-      </form>
-    </div>
+        {/if}
+      </div>
   </div>
 </main>
