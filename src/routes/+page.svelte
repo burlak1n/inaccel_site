@@ -144,7 +144,7 @@
 <style>
   /* Фоновое изображение */
   .background-image {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -1039,7 +1039,7 @@
     background: rgba(255, 255, 255, 0.2);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 972px) {
     .background-image {
       background-size: cover;
       background-position: center;
@@ -1047,6 +1047,14 @@
     
     .registration-section {
       padding: 2rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .background-image {
+      background-image: url('/src/lib/assets/final_small.svg');
+      background-size: cover;
+      background-position: center;
     }
     
     .registration-title {
@@ -1176,7 +1184,7 @@
           {/if}
           
           <p class="privacy-text">
-            Нажимая кнопку ты соглашаешься с <a href="/privacy" class="privacy-link">политикой конфиденциальности</a>
+            Нажимая кнопку ты соглашаешься с <a href="https://drive.google.com/file/d/1lhVKB-ubEKtXiJoSnBCXXqZSOt15wOHa/view?usp=sharing" class="privacy-link">политикой конфиденциальности</a>
           </p>
         </div>
       </form>

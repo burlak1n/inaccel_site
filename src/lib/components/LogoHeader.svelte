@@ -64,13 +64,12 @@
     background: linear-gradient(45deg, var(--primary-purple) 0%, #7732AC 100%);
     color: white;
     border: none;
-    padding: 1px 70px;
     border-radius: 15px;
     transition: all 0.3s ease;
     cursor: pointer;
-    width: 100%;
     font-family: var(--font-raleway);
     font-weight: 600;
+    width: auto;
   }
 
   .registration-button:hover {
@@ -104,9 +103,10 @@
     }
     
     .registration-button {
-      font-size: 35px;
-      padding: 1px 80px;
+      font-size: 25px;
       border-radius: 18px;
+      padding: 10px 60px;
+      width: auto;
     }
   }
 
@@ -131,8 +131,8 @@
     }
     
     .registration-button {
-      font-size: 24px;
-      padding: 1px 65px;
+      font-size: 40px;
+      padding: 24px 102px;
       border-radius: 16px;
     }
   }
