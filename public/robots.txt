@@ -1,3 +1,9 @@
 # allow crawling everything by default
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://inaccel.ingroupsts.ru/sitemap.xml
+
+# Crawl-delay для уважительного поведения
+Crawl-delay: 1
